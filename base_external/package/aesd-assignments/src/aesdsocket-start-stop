@@ -1,0 +1,28 @@
+#!/bin/sh
+
+D_NAME=aesdsocket
+D_PATH=/usr/bin/$D_NAME
+D_ARG="-d"
+PIDFILE=/var/tmp/$D_NAME.pid
+
+if [ ! -x $D_PATH ]; then
+    echo "$D_NAME isn't exist or executable"
+    exit 1
+fi
+
+case $1 in
+    start)
+        echo "Starting $D_NAME daemon"
+        start-stop-daemon -S -n $D_NAME -a $D_PATH -- $D_ARG
+        ;;
+    stop)
+        echo "Stopping $D_NAME daemon"
+        start-stop-daemon -K --pidfile $PIDFILE
+        ;;
+    *)
+        echo "Usage: $0 {start|stop}"
+        exit 1
+        ;;
+esac
+
+exit 0

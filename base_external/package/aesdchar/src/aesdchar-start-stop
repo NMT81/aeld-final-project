@@ -1,0 +1,35 @@
+#!/bin/sh
+
+function unload_aesdchar ()
+{
+    rmmod aesdchar || exit 1
+    rm -f /dev/aesdchar
+}
+
+function load_aesdchar ()
+{
+    insmod /lib/modules/$(uname -r)/updates/aesdchar.ko || exit 1
+    local major=$(awk "\$2==\"aesdchar\" {print \$1}" /proc/devices)
+    local mode="666"
+    rm -f /dev/aesdchar
+    mknod /dev/aesdchar c $major 0
+    chmod $mode /dev/aesdchar
+}
+
+case "$1" in
+  start)
+     echo "Loading aesdchar device"
+     load_aesdchar
+     echo "."
+     ;;
+  stop)
+     echo "Unloading aesdchar device"
+     unload_aesdchar
+     echo "."
+     ;;
+  *)
+     echo "Usage: $0 {start|stop}"
+     exit 1
+esac
+
+exit 0
