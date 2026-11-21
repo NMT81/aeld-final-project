@@ -8,7 +8,7 @@ function unload_aesdchar ()
 
 function load_aesdchar ()
 {
-    insmod /lib/modules/$(uname -r)/updates/aesdchar.ko || exit 1
+    insmod /lib/modules/$(uname -r)/updates/aesdchar.ko.xz || exit 1
     local major=$(awk "\$2==\"aesdchar\" {print \$1}" /proc/devices)
     local mode="666"
     rm -f /dev/aesdchar
